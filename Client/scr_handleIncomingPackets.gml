@@ -52,4 +52,36 @@ switch(msgId)
         global.playerId = buffer_read(buffer, buffer_u32);
         scr_showNotification("Our playerId has been received!");
     break;
-   
+
+    case 7: //player movement update response
+        var pId = buffer_read(buffer, buffer_u32);
+        var xx = buffer_read(buffer, buffer_f32);
+        var yy = buffer_read(buffer, buffer_f32);
+        var spriteNumber = buffer_read(buffer, buffer_u8);
+        var imageIndex = buffer_read(buffer, buffer_u8);
+        var d = buffer_read(buffer, buffer_u8);
+        
+        with (obj_remoteplayer)
+        {
+            if (remotePlayerId == pId)
+            {
+                x = xx;
+                y = yy;
+                sprite_index = spriteNumber;
+                image_index = imageIndex;
+                
+                //decode our direction
+                switch (d)
+                {
+                    case 1:
+                        image_xscale = -1;
+                    break;
+                    
+                    case 2:
+                        image_xscale = 1;
+                    break;
+                }
+            }
+        }
+    break;
+   }
