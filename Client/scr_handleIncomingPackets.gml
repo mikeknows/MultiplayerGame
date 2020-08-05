@@ -85,3 +85,20 @@ switch(msgId)
         }
     break;
    }
+   case 8: // chat message response
+        var pId = buffer_read(buffer, buffer_u32);
+        var text = buffer_read(buffer, buffer_string);
+        
+        // find the owner of the message
+        with (obj_remoteplayer)
+        {
+            if (remotePlayerId == pId)
+            {
+                //create the chat object to follow this remote player
+                var chat = instance_create(x, y, obj_chat);
+                chat.text = text;
+                chat.owner = id;
+            }
+        }
+    break;
+    }
