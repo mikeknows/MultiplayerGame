@@ -182,4 +182,34 @@ switch (msgId)
                 network_send_packet(storedPlayerSocket, global.buffer, buffer_tell(global.buffer));
             }
         }
+
+ case 11: // create/move request
+        var pId = buffer_read(buffer, buffer_u32);
+        var projectileId = buffer_read(buffer, buffer_u32);
+        var xx = buffer_read(buffer, buffer_f32);
+        var yy = buffer_read(buffer, buffer_f32);
+        var roomId = buffer_read(buffer, buffer_u8);
+        
+        var projectile = noone;
+        
+        with (obj_projectile)
+        {
+            if (self.owner == pId && self.projectileId == projectileId)
+            {
+                projectile = id;
+            }
+        }
+        
+        if (projectile != noone)
+        {
+            projectile.x = xx;
+            projectile.y = yy;
+        }
+        else
+        {
+            var p = instance_create(xx, yy, obj_projectile);
+            p.owner = pId;
+            p.projectileId = projectileId;
+        }
 }
+        
