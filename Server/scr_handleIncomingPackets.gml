@@ -85,3 +85,32 @@ switch (msgId)
         buffer_write(global.buffer, buffer_u8, currentRoom);
         network_send_packet(socket, global.buffer, buffer_tell(global.buffer));
     break;
+
+     case 6: // player room change request
+        var pId = buffer_read(buffer, buffer_u32);
+        var type = buffer_read(buffer, buffer_u8);
+        var pX = buffer_read(buffer, buffer_u32);
+        var pY = buffer_read(buffer, buffer_u32);
+        var roomId = buffer_read(buffer, buffer_u8);
+        var pName = "";
+        
+        with (obj_player)
+        {
+            if (playerIdentifier == pId)
+            {
+                if (roomId == 0)
+                {
+                    playerInGame = false;
+                }
+                else
+                {
+                    playerInGame = true;
+                }
+                pName = playerName;
+                playerType = type;
+                playerX = pX;
+                playerY = pY;
+                playerRoom = roomId;
+            }
+        }
+}

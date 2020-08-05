@@ -48,4 +48,8 @@ switch(msgId)
                 room_goto(rm_menu);
             break;
         }
+        case 4: // player ID response
+        global.playerId = buffer_read(buffer, buffer_u32);
+        scr_showNotification("Our playerId has been received!");
+    break;
    
