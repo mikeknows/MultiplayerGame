@@ -84,7 +84,7 @@ switch(msgId)
             }
         }
     break;
-   }
+   
    case 8: // chat message response
         var pId = buffer_read(buffer, buffer_u32);
         var text = buffer_read(buffer, buffer_string);
@@ -101,7 +101,7 @@ switch(msgId)
             }
         }
     break;
-    }
+    
     case 9:  
         var xx = buffer_read(buffer, buffer_f32);
         var yy = buffer_read(buffer, buffer_f32);
@@ -121,3 +121,33 @@ switch(msgId)
             }
         }
     break;
+    
+    case 11: 
+        var pId = buffer_read(buffer, buffer_u32);
+        var projectileId = buffer_read(buffer, buffer_u32);
+        var xx = buffer_read(buffer, buffer_f32);
+        var yy = buffer_read(buffer, buffer_f32);
+        
+        var projectile = noone;
+        
+        with (obj_remoteProjectile)
+        {
+            if (self.owner == pId && self.projectileId == projectileId)
+            {
+                projectile = id;
+            }
+        }
+        
+        if (projectile != noone)
+        {
+            projectile.x = xx;
+            projectile.y = yy;
+        }
+        else
+        {
+            var p = instance_create(xx, yy, obj_remoteProjectile);
+            p.owner = pId;
+            p.projectileId = projectileId;
+        }
+    break;
+}

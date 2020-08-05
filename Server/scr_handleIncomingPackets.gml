@@ -212,4 +212,38 @@ switch (msgId)
             p.projectileId = projectileId;
         }
 }
+// tell other players about this change
+        for (var i = 0; i < ds_list_size(global.players);i++)
+        {
+            var storedPlayerSocket = ds_list_find_value(global.players, i);
+        
+            if (storedPlayerSocket != socket)//don't send a packet to the client we got this request from
+            {
+                var player = noone;
+                
+                with (obj_player)
+                {
+                    if (self.playerSocket == storedPlayerSocket)
+                    {
+                        player = id;
+                    }
+                    
+                    if (player != noone)
+                    {
+                        if (player.playerInGame && player.playerRoom == roomId)
+                        {
+                            buffer_seek(global.buffer, buffer_seek_start, 0);
+                            buffer_write(global.buffer, buffer_u8, 11);
+                            buffer_write(global.buffer, buffer_u32, pId);
+                            buffer_write(global.buffer, buffer_u32, projectileId);
+                            buffer_write(global.buffer, buffer_f32, xx);
+                            buffer_write(global.buffer, buffer_f32, yy);
+                            network_send_packet(storedPlayerSocket, global.buffer, buffer_tell(global.buffer));
+                        }
+                    }
+                }
+            }
+        }
+    break;
+    }
         
