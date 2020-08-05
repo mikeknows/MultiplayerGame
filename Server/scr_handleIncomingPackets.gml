@@ -150,4 +150,36 @@ switch (msgId)
             }
         }
     break;
-    }
+    
+     case 10:
+        var latency = buffer_read(buffer, buffer_u32);
+        var player = noone;
+        
+        with (obj_player)
+        {
+            if (self.playerSocket == socket)
+            {
+                player = id;
+            }
+        }
+        
+        if (player != noone)
+        {
+            player.playerLatency = latency;
+        }
+        
+        // tell other players about this change
+        for (var i = 0; i < ds_list_size(global.players);i++)
+        {
+            var storedPlayerSocket = ds_list_find_value(global.players, i);
+            
+            if (storedPlayerSocket != socket)// don't send a packet to the client we got this requst from
+            {
+                buffer_seek(global.buffer, buffer_seek_start, 0);
+                buffer_write(global.buffer, buffer_u8, 10);
+                buffer_write(global.buffer, buffer_u32, player.playerIdentifier);
+                buffer_write(global.buffer, buffer_u32, player.playerLatency);
+                network_send_packet(storedPlayerSocket, global.buffer, buffer_tell(global.buffer));
+            }
+        }
+}

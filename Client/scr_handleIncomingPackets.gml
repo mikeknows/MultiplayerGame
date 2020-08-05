@@ -102,3 +102,22 @@ switch(msgId)
         }
     break;
     }
+    case 9:  
+        var xx = buffer_read(buffer, buffer_f32);
+        var yy = buffer_read(buffer, buffer_f32);
+
+    break;
+    
+    case 10: 
+        var pId = buffer_read(buffer, buffer_u32);
+        var latency = buffer_read(buffer, buffer_u32);
+        
+        // find the owner of the message
+        with (obj_remoteplayer)
+        {
+            if (remotePlayerId == pId)
+            {
+                remotePlayerLatency = latency;
+            }
+        }
+    break;
